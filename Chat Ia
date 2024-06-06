@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistics Calculator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  .container {
+    text-align: center;
+  }
+  input[type="text"], button {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  button {
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+  }
+  button:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Statistics Calculator</h1>
+  <input type="text" id="numbers" placeholder="Enter numbers separated by commas">
+  <button onclick="calculateStatistics()">Calculate</button>
+  <div id="result"></div>
+</div>
+
+<script>
+function calculateStatistics() {
+  const numbersInput = document.getElementById("numbers").value;
+  const numbersArray = numbersInput.split(',').map(Number).filter(Boolean);
+
+  if (numbersArray.length === 0) {
+    document.getElementById("result").innerHTML = "Please enter valid numbers!";
+    return;
+  }
+
+  const mean = numbersArray.reduce((acc, val) => acc + val, 0) / numbersArray.length;
+
+  const sortedArray = numbersArray.sort((a, b) => a - b);
+  const median = (sortedArray.length % 2 === 0) ?
+    (sortedArray[sortedArray.length / 2 - 1] + sortedArray[sortedArray.length / 2]) / 2 :
+    sortedArray[Math.floor(sortedArray.length / 2)];
+
+  const variance = numbersArray.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / numbersArray.length;
+  const standardDeviation = Math.sqrt(variance);
+
+  const lowerQuartile = (sortedArray.length % 4 === 0) ?
+    (sortedArray[sortedArray.length / 4 - 1] + sortedArray[sortedArray.length / 4]) / 2 :
+    sortedArray[Math.floor(sortedArray.length / 4)];
+
+  const upperQuartile = (sortedArray.length % 4 === 0) ?
+    (sortedArray[sortedArray.length * 3 / 4 - 1] + sortedArray[sortedArray.length * 3 / 4]) / 2 :
+    sortedArray[Math.floor(sortedArray.length * 3 / 4)];
+
+  const interquartileRange = upperQuartile - lowerQuartile;
+
+  const result = `
+    <p>Mean: ${mean.toFixed(2)}</p>
+    <p>Median: ${median}</p>
+    <p>Standard Deviation: ${standardDeviation.toFixed(2)}</p>
+    <p>Interquartile Range: ${interquartileRange}</p>
+  `;
+
+  document.getElementById("result").innerHTML = result;
+}
+</script>
+</body>
+</html>
